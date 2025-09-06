@@ -1,8 +1,13 @@
 import express from 'express'
-
+import { generateShortURL } from '../controller/urls.controller.js'
 const router = express.Router()
 
-router.get("/shortURL", generateShortURL)
+/**
+ * @route   POST /api/shorten
+ * @desc    Create a new short URL
+ * @access  Public
+ */
+router.post("/shortURL", generateShortURL)
 
 
 export default router

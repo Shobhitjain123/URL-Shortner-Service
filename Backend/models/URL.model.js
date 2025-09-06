@@ -11,12 +11,12 @@ const urlSchema = mongoose.Schema({
         required: true
     },
 
-    shortURl: {
+    shortURL: {
         type: String,
         required: true
     },
 
-     clicks: {
+    clicks: {
     type: Number,
     required: true,
     default: 0,
