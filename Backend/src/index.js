@@ -2,8 +2,10 @@ import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import dbConnect from '../utils/dbConnect.js'
-import urlRoutes from '../routes/urls.routes.js'
-import redirectRoutes from '../routes/index.routes.js'
+import urlRoutes from '../routes/urls/urls.routes.js'
+import redirectRoutes from '../routes/urls/index.routes.js'
+import authRoutes from '../routes/auth/auth.routes.js'
+
 dotenv.config()
 const PORT = process.env.PORT || 8000
 dbConnect()
@@ -20,6 +22,8 @@ app.get("/", (_, res) => {
 
 app.use("/api/urls", urlRoutes)
 app.use("/", redirectRoutes)
+
+app.use("/api/auth", authRoutes)
 
 app.listen(PORT, () => {
     console.log(`Listening Server on port ${PORT}`);
