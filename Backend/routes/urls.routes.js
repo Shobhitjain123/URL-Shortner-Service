@@ -7,7 +7,7 @@ const router = express.Router()
  * @desc    Create a new short URL
  * @access  Public
  */
-router.post("/shortURL", generateShortURL)
+router.post("/shortenURL", generateShortURL)
 
 
 export default router

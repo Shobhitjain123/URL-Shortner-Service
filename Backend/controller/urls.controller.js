@@ -32,9 +32,6 @@ const generateShortURL = async (req, res) => {
    
     
     if (url) {
-      
-      url.clicks++;
-      await url.save();
       return res.status(200).json({ success: true, message: "Short URL Generated", data: url });
     }
  
@@ -71,4 +68,23 @@ const generateShortURL = async (req, res) => {
   }
 };
 
-export { generateShortURL };
+const redirectToLongURL = async(req, res) => {
+    const {code} = req.params
+
+    try {
+        const url = await Url.findOne({urlCode: code})
+        if(!url){
+          return res.status(404).json({success: false, message: "No URL Found!!"})
+        }
+        url.clicks++
+        await url.save()
+        res.redirect(302, url.longURL)
+
+    } catch (error) {
+        console.log("Error", error.message);
+        return res.status(500).json({success: false, message: "Internal Server Error"})
+    }
+
+}
+
+export { generateShortURL, redirectToLongURL };
