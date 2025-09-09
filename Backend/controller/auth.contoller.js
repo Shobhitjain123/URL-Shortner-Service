@@ -1,5 +1,7 @@
 import {User} from '../models/User.model.js'
 import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+
 /**
  * @route   POST /api/auth/register
  * @desc    Register a new user
@@ -15,9 +17,7 @@ const registerUser = async(req, res) => {
 
    try {
      const existingUser = await User.findOne({email})
-     console.log("My Code is here");
-     console.log("Existing user value", existingUser);
-     
+
      if(existingUser){
          console.log("My Code is here2");
          return res.status(400).json({success: false, message: "User already exists"})
@@ -45,7 +45,35 @@ const registerUser = async(req, res) => {
    }
 }
 
-const login = async() => {
+const login = async(req, res) => {
+    const {email, password} = req.body
+
+    if(!email || !password){
+       return res.status(400).json({success: false, message:"All Fields are neccessary"})
+    }
+
+    try {
+        const user = await User.findOne({email}).select("+password")
+
+        if(!user){;
+            res.status(404).json({success: false, message: "User Not found"})
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password)
+
+        if(!isMatch){
+            res.status(400).json({success: false, message:"Invalid Credentials"})
+        }
+
+        const token = jwt.sign({id: user._id}, process.env.SECRET_TOKEN, {expiresIn: "1h"})
+
+        res.status(200).json({success: true, message: "User Logged in Successfully", token})
+
+    } catch (error) {
+        console.log("Error", error.message);
+        return res.status(500).json({success: false, message: "Internal server error"})
+        
+    }
 
 }
 

@@ -34,8 +34,7 @@ const generateShortURL = async (req, res) => {
     if (url) {
       return res.status(200).json({ success: true, message: "Short URL Generated", data: url });
     }
- 
-    
+
     const urlCode = nanoid(7);
 
     if (!urlCode) {
@@ -44,27 +43,33 @@ const generateShortURL = async (req, res) => {
 
     const shortURL = `${process.env.BASE_URL}/${urlCode}`;
 
-    const newURLData = await Url.create({
+    const newURLData = {
       longURL,
       shortURL,
       urlCode,
-    });
+    };
 
     if (!newURLData) {
       return res.status(400).json({ success: true, message: "Error Creating New URL" });
     }
 
+    if(req.user){
+      newURLData.user = req.user
+    }
+
+    const newURL = await Url.create(newURLData)
+
     res.status(201).json({
         success: true,
         message: "Short URL Generated",
-        data: newURLData,
+        data: newURL,
       });
 
   } catch (error) {
     console.log("Error:", error.message);
     return res
       .status(500)
-      .json({ success: false, message: "Internal Server Error" });
+      .json({ success: false, message: "ShortenURL Internal Server Error" });
   }
 };
 
