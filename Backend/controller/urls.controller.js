@@ -18,14 +18,13 @@ const generateShortURL = async (req, res) => {
   const { longURL } = req.body;
 
   if (!longURL) {
-    return res.status(400).json({ message: "Please provide a URL" });
+    return res.status(400).json({success: false, message: "Please provide a URL" });
   }
   const isValidURL = validURL.isWebUri(longURL);
 
   if (!isValidURL) {
-    return res.status(400).json({ message: "Invalid URL format provided" });
+    return res.status(400).json({success: false,  message: "Invalid URL format provided" });
   }
-
 
   try {
     const url = await Url.findOne({ longURL });
@@ -49,15 +48,15 @@ const generateShortURL = async (req, res) => {
       urlCode,
     };
 
-    if (!newURLData) {
-      return res.status(400).json({ success: true, message: "Error Creating New URL" });
-    }
-
     if(req.user){
       newURLData.user = req.user
     }
 
     const newURL = await Url.create(newURLData)
+
+     if (!newURL) {
+      return res.status(400).json({ success: true, message: "Error Creating New URL" });
+    }
 
     res.status(201).json({
         success: true,

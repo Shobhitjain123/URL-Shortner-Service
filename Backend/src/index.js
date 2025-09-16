@@ -22,7 +22,7 @@ app.get("/", (_, res) => {
 })
 
 app.use("/api/urls", urlRoutes)
-app.use("/", redirectRoutes)
+app.use("/api", redirectRoutes)
 
 app.use("/api/auth", authRoutes)
 
