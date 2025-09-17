@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { createShortURl } from '../services/apiService.js'
+import { useAuth } from '../context/AuthContext.jsx';
 const Home = () => {
-
+  const {token} = useAuth()
   const [longURL, setLongURL] = useState("")
   const [shortURL, setShortURL] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -10,14 +11,15 @@ const Home = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-
+      
       if (!longURL || longURL.trim().length === 0) {
         setError("Enter valid URL")
       }
-
+      
       setLoading(true)
-
-      const data = await createShortURl(longURL)
+      
+      const data = await createShortURl(longURL, token)
+      console.log("code is here");
       if (data.success) {
         setError(null)
         setShortURL(data.data)
@@ -27,8 +29,7 @@ const Home = () => {
       }
       
     } catch (error) {
-      throw new Error(error)
-
+      // throw new Error(error)
     } finally {
       setLoading(false)
       setLongURL("")

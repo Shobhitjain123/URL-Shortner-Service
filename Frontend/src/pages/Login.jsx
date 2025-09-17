@@ -28,7 +28,6 @@ const Login = () => {
 
     try {
       const data = await login(formData);
-      console.log(data);
       
       if(data.success){
         setError(null)
