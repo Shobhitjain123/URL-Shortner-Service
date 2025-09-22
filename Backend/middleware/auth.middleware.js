@@ -1,14 +1,16 @@
 import jwt from 'jsonwebtoken'
 import { User } from '../models/User.model.js'
 const auth = async(req, res, next) => {
-    const token = req.header('x-auth-token')
-
-    try {
-        if(!token){
+    let token = req.headers['authorization']    
+    const jwtToken = token.split(' ')[1]
+    
+    if(!jwtToken){
+        console.log("Validating token", jwtToken);
            return next()
-        }
+    }    
+    try {
         
-        const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN)
+        const decodedToken = jwt.verify(jwtToken, process.env.SECRET_TOKEN)
         
         const user = await User.findOne({_id: decodedToken.id}) 
         

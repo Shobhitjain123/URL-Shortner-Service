@@ -4,9 +4,14 @@ import { useAuth } from '../context/AuthContext.jsx';
 export const createShortURl = async(longURL, token) => { 
     const config = {
         headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': 'Bearer '
         }
     }
+    
+    if(token){
+        config.headers['Authorization'] = `Bearer ${token}`
+    }
+    
     try {
         
         const response = await axios.post("/api/urls/shortenURL", {longURL}, config)

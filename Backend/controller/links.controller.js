@@ -7,7 +7,6 @@ const getMyLinks = async(req, res) => {
     }
 
     const user = req.user
-    console.log(user);
     
    try {
      const listOfURL = await Url.find({user: user._id})

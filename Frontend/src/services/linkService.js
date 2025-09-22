@@ -1,10 +1,16 @@
 import axios from 'axios'
 export const getUsersLinks = async (token) => {
+
   const config = {
     headers: {
-      'Authorization': `Bearer ${token}`,
+      'Authorization': `Bearer `,
     },
   };
+
+  if(token){
+    config.headers['Authorization'] = `Bearer ${token}`
+  }
+
   try {
     const response = await axios.get("/api/links/my-links", config);
     return response.data;

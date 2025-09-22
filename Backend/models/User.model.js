@@ -20,7 +20,14 @@ const userSchema = mongoose.Schema({
         required: [true, "Please provide a password"],
         minlength: 6,
         select: false
-    }
+    },
+
+    links: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Url'
+        }
+    ]
 
 }, {timestamps: true}
 )

@@ -1,98 +1,107 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext.jsx'
-import { useNavigate } from 'react-router-dom'
-import {getUsersLinks} from '../services/linkService.js'
+import { getUsersLinks } from '../services/linkService.js'
+import Spinner from '../components/Spinner/Spinner.jsx'
 
 const Dashboard = () => {
-  
-  const {logout, token} = useAuth()
+
+  const { token } = useAuth()
   const [linksList, setLinksList] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
-
-  const navigate = useNavigate()
-  const handleLogout = () => {
-    logout()
-    navigate('/login')
-  }
+  const [copiedLinkId, setCopiedLinkId] = useState(null)
 
   useEffect(() => {
     setIsLoading(true)
-    const fetchLinks = async() => {
-        try {
-               
+    const fetchLinks = async () => {
+      try {
+
         const data = await getUsersLinks(token)
-        if(data){
+        if (data) {
           setLinksList(data.data)
         }
-        
-        } catch (error) {
-          console.log("Error", error.message)
-          setError(error.message)
 
-        } finally{
-          setIsLoading(false)
-        }
+      } catch (error) {
+        console.log("Error", error.message)
+        setError(error.message)
+
+      } finally {
+        setIsLoading(false)
+      }
     }
 
     fetchLinks()
   }, [])
-  console.log(linksList);
-  
+
+
+  const handleCopy = async (shortURL, linkId) => {
+    if (!shortURL) return
+
+    try {
+      await navigator.clipboard.writeText(shortURL)
+      setCopiedLinkId(linkId)
+
+      setTimeout(() => setCopiedLinkId(null), 500)
+
+    } catch (error) {
+      console.log("Error While Copying to clipboard", error.message);
+      alert("Failed to copy url")
+    }
+  }
+
   return (
-    <div className="dashboard-container">
-      <h2>My Dashboard</h2>
-      <p>Welcome to your personal dashboard! Here you will be able to see all the links you have created.</p>
-    
-      <div className="links-list-placeholder" style= {{marginTop: '2rem'}}>
-
-          {isLoading ? (
-            <p>Loading your Links...</p>
-          ) : error ? (
-            <p className="error-message" style={{ color: 'red' }}>Error: {error}</p>
-          ) : 
-            linksList.length > 0 ? (
-                <table className="links-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ borderBottom: '2px solid #333' }}>
-                <th style={{ padding: '8px', textAlign: 'left' }}>Original URL</th>
-                <th style={{ padding: '8px', textAlign: 'left' }}>Short URL</th>
-                <th style={{ padding: '8px', textAlign: 'left' }}>Clicks</th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* 4. Use the .map() method to iterate over the links array */}
-              {linksList.map((link) => (
-                // 5. The `key` prop is crucial for React's performance and correctness.
-                //    We use the unique `_id` from MongoDB as the key.
-                <tr key={link._id} style={{ borderBottom: '1px solid #ddd' }}>
-                  <td style={{ padding: '8px', wordBreak: 'break-all' }}>
-                    {/* Display a truncated version of the long URL for cleaner UI */}
-                    <a href={link.longURL} title={link.longUrl} target="_blank" rel="noopener noreferrer">
-                      {link.longURL.substring(0, 50)}...
-                    </a>
-                  </td>
-                  <td style={{ padding: '8px' }}>
-                    {/* The short URL is a clickable link that opens in a new tab */}
-                    <a href={link.shortURL} target="_blank" rel="noopener noreferrer">
-                      {link.shortURL}
-                    </a>
-                  </td>
-                  <td style={{ padding: '8px', textAlign: 'center' }}>
-                    {link.clicks}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-            ) : (<p>You haven't created any short links yet. Go to the homepage to create your first one!</p>)
-          }
-
+    <div className="max-w-5xl mx-auto">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-3xl font-bold">My Dashboard</h2>
       </div>
+      <div className="bg-white rounded-lg shadow-lg overflow-hidden">
 
-      <button onClick={handleLogout} className="btn btn-logout" style={{ marginTop: '2rem' }}>
-        Logout
-      </button>
+        {isLoading ? (
+          <div className="p-12 flex justify-center"><Spinner /></div>
+        ) : error ? (
+          <p className="p-6 text-red-500">Error: {error}</p>
+        ) :
+          linksList.length > 0 ? (
+            <table className="w-full text-left" style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead className="bg-slate-50 border-b">
+                <tr style={{ borderBottom: '2px solid #333' }}>
+                  <th className="p-4 font-semibold">Original URL</th>
+                  <th className="p-4 font-semibold">Short URL</th>
+                  <th className="p-4 font-semibold text-center">Clicks</th>
+                  <th className="p-4 font-semibold">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {linksList.map((link) => (
+                  <tr key={link._id} className="border-b last:border-0 hover:bg-slate-50">
+                    <td className="p-4 max-w-xs truncate">
+                      <a href={link.longURL} title={link.longUrl} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                        {link.longURL.substring(0, 50)}...
+                      </a>
+                    </td>
+                    <td className="p-4">
+                      <a href={link.shortURL} target="_blank" rel="noopener noreferrer" className="text-blue-600 font-mono hover:underline">
+                        {link.shortURL}
+                      </a>
+                    </td>
+                    <td className="p-4 text-center font-semibold">
+                      {link.clicks}
+                    </td>
+                    <td className="p-4">
+                      <button
+                        type="button"
+                        className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 text-sm rounded-md"
+                        onClick={() => handleCopy(link.shortURL, link._id)}>
+                        {copiedLinkId === link._id ? 'Copied!' : 'Copy'}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : <p className="p-6 text-center text-slate-500">You haven't created any short links yet. Go to the homepage to create your first one!</p>
+        }
+      </div>
     </div>
   )
 }
