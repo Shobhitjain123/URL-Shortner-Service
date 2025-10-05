@@ -1,6 +1,5 @@
 import {Link, useNavigate} from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
-import './Navbar.css';
 
 const Navbar = () => {
 
@@ -17,7 +16,7 @@ const Navbar = () => {
     <nav className="bg-gray-800 text-white p-4 shadow-md">
       <div className='container mx-auto flex justify-between items-center'>
         <div className="text-2xl font-bold">
-        <Link to="/">Short.ly</Link>
+        <Link to="/">Clippr</Link>
       </div>
       <ul className="flex gap-4 items-center">
         <li><Link to="/" className='hover:text-blue-300'>Home</Link></li>
