@@ -23,7 +23,6 @@ const Home = () => {
       setLoading(true)
 
       const data = await createShortURl(longURL, token)
-      console.log("code is here");
       if (data.success) {
         setError(null)
         setShortURL(data.data)

@@ -19,7 +19,6 @@ const registerUser = async(req, res) => {
      const existingUser = await User.findOne({email})
 
      if(existingUser){
-         console.log("My Code is here2");
          return res.status(400).json({success: false, message: "User already exists"})
      }
      
@@ -56,16 +55,16 @@ const login = async(req, res) => {
         const user = await User.findOne({email}).select("+password")
 
         if(!user){;
-            res.status(404).json({success: false, message: "User Not found"})
+            return res.status(404).json({success: false, message: "User Not found"})
         }
-
+        
         const isMatch = await bcrypt.compare(password, user.password)
-
+        
         if(!isMatch){
-            res.status(400).json({success: false, message:"Invalid Credentials"})
+            return res.status(400).json({success: false, message:"Invalid Credentials"})
         }
-
-        const token = jwt.sign({id: user._id}, process.env.SECRET_TOKEN, {expiresIn: "1h"})
+        
+        const token = jwt.sign({id: user._id}, process.env.SECRET_TOKEN, {expiresIn: "24h"})
 
         res.status(200).json({success: true, message: "User Logged in Successfully", token})
 

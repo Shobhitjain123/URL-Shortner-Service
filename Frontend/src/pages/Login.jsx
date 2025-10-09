@@ -18,8 +18,8 @@ const Login = () => {
   const handleSubmit = async(e) => {
     e.preventDefault()
     
-    if (!formData.name || !formData.email || !formData.password) {
-      setError("All Fields are reuired")
+    if (!formData.email || !formData.password) {
+      setError("All Fields are required")
     }
 
     if (formData.email.trim().length === 0 ||

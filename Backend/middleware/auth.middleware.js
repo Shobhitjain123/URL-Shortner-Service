@@ -5,7 +5,6 @@ const auth = async(req, res, next) => {
     const jwtToken = token.split(' ')[1]
     
     if(!jwtToken){
-        console.log("Validating token", jwtToken);
            return next()
     }    
     try {

@@ -1,5 +1,4 @@
-import axios from 'axios'
-import { useAuth } from '../context/AuthContext.jsx';
+import {axiosInstance} from '../utils/axiosInstance'
 
 export const createShortURl = async(longURL, token) => { 
     const config = {
@@ -13,15 +12,10 @@ export const createShortURl = async(longURL, token) => {
     }
     
     try {
-        
-        const response = await axios.post("/api/urls/shortenURL", {longURL}, config)
-        console.log(response);
-        
+        const response = await axiosInstance.post("/api/urls/shortenURL", {longURL}, config)
         return response.data
     } catch (error) {        
         if(error.response && error.response.data){      
-            console.log(error.response.data);
-                  
             return error.response.data
         }else{
             throw new Error("An unexpected error occurred. Please try again.")
@@ -31,14 +25,10 @@ export const createShortURl = async(longURL, token) => {
 
 export const registerUser = async(userData) => {
     try {
-        const response = await axios.post("/api/auth/register", userData)
-        console.log(response);
-        
+        const response = await axiosInstance.post("/api/auth/register", userData)
         return response.data
     } catch (error) {        
         if(error.response && error.response.data){      
-            console.log(error.response.data);
-                  
             return error.response.data
         }else{
             throw new Error("An unexpected error occurred. Please try again.")
@@ -48,12 +38,10 @@ export const registerUser = async(userData) => {
 
 export const login = async(credentials) => {
     try {
-        const response = await axios.post("/api/auth/login", credentials)        
+        const response = await axiosInstance.post("/api/auth/login", credentials)        
         return response.data
     } catch (error) {        
         if(error.response && error.response.data){      
-            console.log(error.response.data);
-                  
             return error.response.data
         }else{
             throw new Error("An unexpected error occurred. Please try again.")

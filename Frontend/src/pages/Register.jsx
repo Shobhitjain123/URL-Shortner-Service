@@ -28,7 +28,6 @@ const Register = () => {
 
     try {
       const data = await registerUser(formData)
-      console.log(data);
 
       if (data.success) {
         setError(null)

@@ -44,7 +44,7 @@ const Dashboard = () => {
       setTimeout(() => setCopiedLinkId(null), 500)
 
     } catch (error) {
-      console.log("Error While Copying to clipboard", error.message);
+      console.error("Error While Copying to clipboard", error.message);
       alert("Failed to copy url")
     }
   }
@@ -61,7 +61,7 @@ const Dashboard = () => {
         ) : error ? (
           <p className="p-6 text-red-500">Error: {error}</p>
         ) :
-          linksList.length > 0 ? (
+          linksList?.length > 0 ? (
             <table className="w-full text-left" style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead className="bg-slate-50 border-b">
                 <tr style={{ borderBottom: '2px solid #333' }}>
@@ -73,26 +73,26 @@ const Dashboard = () => {
               </thead>
               <tbody>
                 {linksList.map((link) => (
-                  <tr key={link._id} className="border-b last:border-0 hover:bg-slate-50">
+                  <tr key={link?._id} className="border-b last:border-0 hover:bg-slate-50">
                     <td className="p-4 max-w-xs truncate">
-                      <a href={link.longURL} title={link.longUrl} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                        {link.longURL.substring(0, 50)}...
+                      <a href={link?.longURL} title={link?.longUrl} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                        {link?.longURL.substring(0, 50)}...
                       </a>
                     </td>
                     <td className="p-4">
-                      <a href={link.shortURL} target="_blank" rel="noopener noreferrer" className="text-blue-600 font-mono hover:underline">
-                        {link.shortURL}
+                      <a href={link?.shortURL} target="_blank" rel="noopener noreferrer" className="text-blue-600 font-mono hover:underline">
+                        {link?.shortURL}
                       </a>
                     </td>
                     <td className="p-4 text-center font-semibold">
-                      {link.clicks}
+                      {link?.clicks}
                     </td>
                     <td className="p-4">
                       <button
                         type="button"
                         className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 text-sm rounded-md"
-                        onClick={() => handleCopy(link.shortURL, link._id)}>
-                        {copiedLinkId === link._id ? 'Copied!' : 'Copy'}
+                        onClick={() => handleCopy(link?.shortURL, link?._id)}>
+                        {copiedLinkId === link?._id ? 'Copied!' : 'Copy'}
                       </button>
                     </td>
                   </tr>

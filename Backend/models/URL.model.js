@@ -30,4 +30,7 @@ const urlSchema = mongoose.Schema({
 
 })
 
+// 🔹 Index to speed up lookups by longURL
+urlSchema.index({ longURL: 1 });
+
 export const Url = new mongoose.model("Url", urlSchema)
